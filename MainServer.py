@@ -1,13 +1,16 @@
 from threading import Thread
+from AddStuServer import AddStuServer
+from PrintAllServer import PrintAllServer
 import socket
 import json
-from Add_server import Add_svr
-from Show_server import Show_svr
 
+host = "127.0.0.1"
+port = 20001
 
-function_list = {'add': Add_svr,
-                 'show': Show_svr}
-
+func_list = {
+    "add": AddStuServer,
+    "show": PrintAllServer
+}
 
 class SocketServer(Thread):
     def __init__(self, host, port):
@@ -46,34 +49,28 @@ class SocketServer(Thread):
                 if not message:
                     keep_going = False
                 message = json.loads(message)
-                if message['command'] == "close":
+                if message['command'] == "exit":
                     connection.send("closing".encode())
                     keep_going = False
                 else:
-                    print(message, address)
-                    reply_msg = Receive_Client(message, address)
+                    print(message)
+                    print(f'    server recived:{message} from {address}')
+                    reply_msg = func_list[message['command']].execute(message['parameters'])
                     connection.send(json.dumps(reply_msg).encode())
-
+        
         connection.close()
-        print("{} close connection".format(address))
-
-
-def Receive_Client(message, address):
-    receive_command = message['command']
-    parameters = message['parameters']
-    print(f'    server received:{message} from:{address}')
-    data = function_list[receive_command]().execute(parameters)
-    return data
-
+        print("{} close connection".format(address)) 
 
 if __name__ == '__main__':
-    Server = SocketServer('127.0.0.1', 20001)
-    Server.daemon = True
-    Server.serve()
+    server = SocketServer(host, port)
+    server.daemon = True
+    server.serve()
 
+    # because we set daemon is true, so the main thread has to keep alive
     while True:
         command = input()
-        if command == 'finish':
+        if command == "finish":
             break
-    Server.server_socket.close()
-    print("Server Close")
+    
+    server.server_socket.close()
+    print("leaving ....... ")
