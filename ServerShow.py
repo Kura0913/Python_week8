@@ -1,6 +1,6 @@
 from StudentInfoProcessor import StudentInfoProcessor
 
-class server_show():
+class ServerShow():
     def __init__(self):
         self.student_dict = StudentInfoProcessor().read_student_file()
     def execute(self,data):
