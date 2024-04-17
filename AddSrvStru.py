@@ -4,7 +4,7 @@ class AddSrvStru():
     def __init__(self):
         pass
 
-    def execute(parameters):
+    def execute(self, parameters):
         stu_dict = StudentInfoProcessor().read_student_file()
         reply_msg = {'status':''}
 
