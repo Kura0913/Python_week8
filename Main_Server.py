@@ -51,8 +51,11 @@ class SocketServer(Thread):
                     keep_going = False
                 else:
                     print(message, address)
-                    reply_msg = Receive_Client(message, address)
-                    connection.send(json.dumps(reply_msg).encode())
+                    if message['command'] == 'exit':
+                        keep_going = False
+                    else:
+                        reply_msg = Receive_Client(message, address)
+                        connection.send(json.dumps(reply_msg).encode())
 
         connection.close()
         print("{} close connection".format(address))
