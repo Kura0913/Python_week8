@@ -1,10 +1,10 @@
 
-from server_show import server_show
-from server_add import server_add
+from ServerShow import ServerShow
+from ServerAdd import ServerAdd
 
 action_list = {
-    "add": server_add,  
-    "show": server_show
+    "add": ServerAdd,  
+    "show": ServerShow
 }
 
 class Parse():
@@ -13,4 +13,5 @@ class Parse():
     def execute(self,message):
         sent_data = action_list[message['command']]().execute(message['parameters'])
         return sent_data
+    #將server收到的message取出cammand和parameters，透過action_list驅動對應command的function
  
