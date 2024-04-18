@@ -64,7 +64,13 @@ class SocketServer(Thread):
 
 def parser(message,student_dict, address):
     print(f"    server recived:{message} from ({address})")
-    student_dict, reply_msg = Func[message['command']](student_dict).execute(message['parameters'])
+    if message['command'] == "add":
+        ServerAddStu(student_dict).execute(message['parameters'])
+    elif message['command'] == "show":
+        ServerShow(student_dict).execute(message['parameters'])
+    else:
+        print("command error")
+        return 0
     return student_dict, reply_msg
 
 if __name__ == '__main__':
